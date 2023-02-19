@@ -8,80 +8,80 @@ Author:xinliangzhong(xinliangzhong@foxmail.com)
 
 ![demo](results/demo.gif)
 
-#   怎么使用
-##步骤0：
-将解压包放到一个ros工作空间，并使用以下命令进行编译
+# Wie verwenden
+## Schritt 0.
+Legen Sie das entpackte Paket in einen ros-Workspace und kompilieren Sie es mit dem folgenden Befehl
 
 ```
 catkin_make --pkg camera_laser_calibration
 ```
 
-如果遇到cv_bridge的错误那请将Cmakelists.txt第12行取消注释
-如果提示ceres未安装，请按照ceres官方指示进行安装操作
+Wenn Sie einen cv_bridge-Fehler erhalten, entfernen Sie das Kommentarzeichen in Zeile 12 von Cmakelists.txt
+Wenn es heißt, dass ceres nicht installiert ist, folgen Sie bitte den offiziellen ceres-Anweisungen, um es zu installieren
 
-## 步骤1：
-进入到ros工作空间
+## Schritt 1.
+Gehen Sie zum Arbeitsbereich ros
 
 ```
 source devel/setup.bash
 ```
 
-然后运行
+Dann laufen
 
 ```
 roslaunch camera_laser_calibration collect_laser_image_data.launch
 ```
-进入到你要用于标定的bag文件目录下 并执行
+Wechseln Sie in das Verzeichnis der Beuteldatei, die Sie für die Kalibrierung verwenden möchten, und führen Sie
 ```
 rosbag play --pause XXX.bag
 ```
 
-此时记得用空格键来控制bag的播放与暂停
+Denken Sie daran, die Leertaste zu benutzen, um die Wiedergabe und die Pause des Beutels an dieser Stelle zu steuern
 
-开启一个新的终端 启动rqt
-选择**Plungs/Configuration/Dynamic Reconfiguration**
+Öffnen Sie ein neues Terminal und starten Sie rqt
+Wählen Sie **Planung/Konfiguration/Dynamische Rekonfiguration**.
 
-最终你在rviz和rqt将看到以下两个画面表示成功, 其中rviz出现图像和激光彩色线条，rqt中出现控制界面
+Schließlich werden Sie die folgenden beiden Bildschirme in rviz und rqt sehen, um den Erfolg anzuzeigen, wobei Bilder und farbige Laserlinien in rviz erscheinen und der Kontrollbildschirm in rqt angezeigt wird
 
 ![](how_to_use_imgs/img1.png)
 
-## 步骤2
+## Schritt 2
 
-如果你不想看文字，可以直接看根目录下的演示视频 How_to_use.mp4
+Wenn Sie den Text nicht lesen wollen, können Sie sich einfach das Demo-Video How_to_use.mp4 im Stammverzeichnis ansehen
 
-**暂停bag的播放**
+**Wiedergabe der Tasche unterbrechen**
 
-通过rviz工具栏的 **2D Nav Goal** 去选择激光的点，选择之后会在第一个启动标定程序的终端显示出类似以下的内容
-
-
-[ INFO] [1534164489.163120940]: Setting goal: Frame:laser, Position(**1.575, -0.752**, 0.000), Orientation(0.000, 0.000, -0.688, 0.725) = Angle: -1.518
-
-请复制我标粗的部分到粘贴板
-并切换到rqt界面，将其粘贴到laser_coor右边的框中，如果是上面的例子，粘贴完成应该显示1.575, -0.752
-
-**勾选Save按钮**
-此时会弹出当前激光对应的图像，你需要勾选一个小的矩形框，勾选完成后 会弹出检测出坐标点的特征点，然后对着图像窗口按键盘空格键，窗口将消失
-数据将以 **x y u v** 的格式存自动保存在data/data_v2.txt文件夹下
+Wählen Sie den Punkt des Lasers aus, indem Sie **2D Nav Goal** in der rviz-Symbolleiste wählen. Nach der Auswahl wird am ersten Terminal, das den Kalibrierungsprozess startet, etwas wie folgt angezeigt
 
 
-## 步骤3
-标定
-将data/data_v2.txt 复制一份变为data.txt
+[INFO] [1534164489.163120940]: Ziel setzen: Frame:laser, Position(**1.575, -0.752**, 0.000), Orientierung(0.000, 0.000, -0.688, 0.725) = Winkel: -1.518
+
+Bitte kopieren Sie den fettgedruckten Teil in die Zwischenablage
+und wechseln Sie zur rqt-Schnittstelle und fügen Sie sie in das Feld rechts neben laser_coor ein. Im obigen Beispiel sollte die Einfügung 1,575, -0,752 anzeigen
+
+**Kreuzen Sie die Schaltfläche Speichern an**
+Das Bild, das dem aktuellen Laser entspricht, wird eingeblendet, und Sie müssen ein kleines rechteckiges Kästchen ankreuzen. Wenn Sie dies getan haben, werden die Feature-Punkte eingeblendet und die Koordinaten werden ermittelt.
+Die Daten werden automatisch im Ordner data/data_v2.txt im Format **x y u v** gespeichert.
+
+
+## Schritt 3
+Kalibrierung
+Erstellen Sie eine Kopie von data/data_v2.txt in data.txt
 
 ```
 roslaunch camera_laser_calibration calibration.launch
 ```
 
-标定结果
-``Tcl: 结果为激光雷达到相机的外参，它会自动保存到data文件夹下``
+Ergebnisse der Kalibrierung
+``Tcl: Das Ergebnis ist die externe Referenz vom Lidar zur Kamera, die automatisch im Datenordner gespeichert wird ``
 
-![reprojection](results/optimization_result.png)
+! [Reprojektion](Ergebnisse/Optimierung_Ergebnis.png)
 
-## 步骤4
-重投影检验标定结果
+## Schritt 4
+Reprojektion zur Überprüfung der Kalibrierungsergebnisse
 
 ```
 roslaunch camera_laser_calibration reprojection_test.launch
 ```
-会自动启动rviz，重投影图像是以rosmsg消息发布的
-![demo0](results/rotation.gif)
+startet automatisch rviz und das Reprojektionsbild wird als rosmsg-Nachricht versendet
+! [demo0](ergebnisse/rotation.gif)
