@@ -119,16 +119,16 @@ void on_mouse(int event,int x,int y,int flags,void *ustc)
     static Point pre_pt(-1,-1);
     static Point cur_pt(-1,-1);
     char temp[16];
-    if (event == CV_EVENT_LBUTTONDOWN)
+    if (event == EVENT_LBUTTONDOWN)
     {
         org.copyTo(img);
         sprintf(temp,"(%d,%d)",x,y);
         pre_pt = Point(x,y);
         putText(img,temp,pre_pt,FONT_HERSHEY_SIMPLEX,0.5,Scalar(0,0,0,255),1,8);
-        circle(img,pre_pt,2,Scalar(255,0,0),CV_FILLED,CV_AA,0);
+        circle(img,pre_pt,2,Scalar(255,0,0),FILLED,LINE_AA,0);
         imshow("img",img);
     }
-    else if (event == CV_EVENT_MOUSEMOVE && !(flags & CV_EVENT_FLAG_LBUTTON))
+    else if (event == EVENT_MOUSEMOVE && !(flags & EVENT_FLAG_LBUTTON))
     {
         img.copyTo(tmp);
         sprintf(temp,"(%d,%d)",x,y);
@@ -136,7 +136,7 @@ void on_mouse(int event,int x,int y,int flags,void *ustc)
         putText(tmp,temp,cur_pt,FONT_HERSHEY_SIMPLEX,0.5,Scalar(0,0,255));
         imshow("img",tmp);
     }
-    else if (event == CV_EVENT_MOUSEMOVE && (flags & CV_EVENT_FLAG_LBUTTON))
+    else if (event == EVENT_MOUSEMOVE && (flags & EVENT_FLAG_LBUTTON))
     {
         img.copyTo(tmp);
         sprintf(temp,"(%d,%d)",x,y);
@@ -145,13 +145,13 @@ void on_mouse(int event,int x,int y,int flags,void *ustc)
         rectangle(tmp,pre_pt,cur_pt,Scalar(255,0,0),1,8,0);
         imshow("img",tmp);
     }
-    else if (event == CV_EVENT_LBUTTONUP)
+    else if (event == EVENT_LBUTTONUP)
     {
         org.copyTo(img);
         sprintf(temp,"(%d,%d)",x,y);
         cur_pt = Point(x,y);
         putText(img,temp,cur_pt,FONT_HERSHEY_SIMPLEX,0.5,Scalar(0,0,255));
-        circle(img,pre_pt,2,Scalar(255,0,0),CV_FILLED,CV_AA,0);
+        circle(img,pre_pt,2,Scalar(255,0,0),FILLED,LINE_AA,0);
         rectangle(img,pre_pt,cur_pt,Scalar(255,0,0),1,8,0);
         imshow("img",img);
         /// Corner detector
