@@ -1,77 +1,79 @@
-#   怎么使用
-##步骤0：
-将解压包放到一个ros工作空间，并使用以下命令进行编译
+# How to use
+## Step 0:
+Place the unpacked package into a ros workspace and compile it with the following command
 
 ```
 catkin_make --pkg camera_laser_calibration
 ```
 
-如果遇到cv_bridge的错误那请将Cmakelists.txt第12行取消注释
-如果提示ceres未安装，请按照ceres官方指示进行安装操作
+If you get a cv_bridge error then uncomment line 12 of Cmakelists.txt
+If it says ceres is not installed, please follow the official ceres instructions to install it
 
-## 步骤1：
-进入到ros工作空间
+## Step 1:
+Go to the ros workspace
 
 ```
 source devel/setup.bash
 ```
 
-然后运行
+Then run
 
 ```
 roslaunch camera_laser_calibration collect_laser_image_data.launch
 ```
-进入到你要用于标定的bag文件目录下 并执行
+Go to the directory of the bag file you want to use for calibration and run
 ```
 rosbag play --pause XXX.bag
 ```
 
-此时记得用空格键来控制bag的播放与暂停
+Remember to use the spacebar to control the play and pause of the bag at this point
 
-开启一个新的终端 启动rqt
-选择**Plungs/Configuration/Dynamic Reconfiguration**
+Open a new terminal and start rqt
+Select **Plugins/Configuration/Dynamic Reconfiguration**
 
-最终你在rviz和rqt将看到以下两个画面表示成功, 其中rviz出现图像和激光彩色线条，rqt中出现控制界面
+Eventually you will see the following two screens in rviz and rqt to indicate success, where images and laser coloured lines appear in rviz and the control screen appears in rqt
 
 ![](how_to_use_imgs/img1.png)
 
-## 步骤2
+## Step 2
 
-如果你不想看文字，可以直接看根目录下的演示视频 How_to_use.mp4
+If you don't want to read the text, you can just watch the demo video How_to_use.mp4 in the root directory
 
-**暂停bag的播放**
+**pause bag playback**
 
-通过rviz工具栏的 **2D Nav Goal** 去选择激光的点，选择之后会在第一个启动标定程序的终端显示出类似以下的内容
-
-
-[ INFO] [1534164489.163120940]: Setting goal: Frame:laser, Position(**1.575, -0.752**, 0.000), Orientation(0.000, 0.000, -0.688, 0.725) = Angle: -1.518
-
-请复制我标粗的部分到粘贴板
-并切换到rqt界面，将其粘贴到laser_coor右边的框中，如果是上面的例子，粘贴完成应该显示1.575, -0.752
-
-**勾选Save按钮**
-此时会弹出当前激光对应的图像，你需要勾选一个小的矩形框，勾选完成后 会弹出检测出坐标点的特征点，然后对着图像窗口按键盘空格键，窗口将消失
-数据将以 **x y u v** 的格式存自动保存在data/data_v2.txt文件夹下
+Select the point of the laser by going to **2D Nav Goal** in the rviz toolbar. After selection it will show something like this at the first terminal that starts the calibration process
 
 
-## 步骤3
-标定
-将data/data_v2.txt 复制一份变为data.txt
+[ INFO] [1534164489.163120940]: Setting goal: Frame:laser, Position(**1.575, -0.752**, 0.000), Orientation(0.000, 0.000, -0.688, 0.725) = Angle. -1.518
+
+Please copy the bolded part to the pasteboard
+and switch to the rqt interface and paste it into the box to the right of laser_coor, if this is the example above, the paste should show 1.575, -0.752
+
+**Check the Save button**
+The image corresponding to the current laser will pop up and you will need to tick a small rectangular box, when this is done the feature points will pop up and the coordinate points will be detected, then press the space bar against the image window and the window will disappear
+The data will be saved automatically in the data/data_v2.txt folder in **x y u v** format
+
+
+## Step 3
+Calibration
+Make a copy of data/data_v2.txt into data.txt
 
 ```
 roslaunch camera_laser_calibration calibration.launch
 ```
 
-标定结果
-``Tcl: 结果为激光雷达到相机的外参，它会自动保存到data文件夹下``
+Calibration results
+``Tcl: The result is the external reference from the lidar to the camera, which is automatically saved in the data folder ``
 
 ![reprojection](results/optimization_result.png)
 
-## 步骤4
-重投影检验标定结果
+## Step 4
+Reprojection to check the calibration results
 
 ```
 roslaunch camera_laser_calibration reprojection_test.launch
 ```
-会自动启动rviz，重投影图像是以rosmsg消息发布的
+will automatically launch rviz and the reprojection image will be posted as a rosmsg message
 ![demo0](results/rotation.gif)
+
+Translated with www.DeepL.com/Translator (free version)
